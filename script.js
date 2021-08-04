@@ -1,54 +1,72 @@
+var correctAnswerCount = 0;
+var userScore = document.getElementById("userScore");
+var displayScore = document.getElementById("display-score");
 var startButton = document.getElementById("startButton");
 var nextButton = document.getElementById("next-btn");
 var questionContainerEl = document.getElementById("question-container");
 var questionEl = document.getElementById("question");
 var answerButtons = document.getElementById("answer-buttons");
-var shuffledQuestions = "";
 var currentQuestionIndex = "";
+
+var localStorageContents = JSON.parse(localStorage.getItem("userScore"));
+console.log(localStorageContents);
+// var previousHighScore;
+if (localStorageContents !== null) {
+  let previousHighScore = localStorageContents;
+} else {
+  previousHighScore = [];
+}
+console.log(previousHighScore);
 
 var questions = [
   {
     question: "What is the third planet from the sun?",
     answers: [
-      { text: "Earth", correct: true },
-      { text: "Mars", correct: false },
-      { text: "Mercury", correct: false },
-      { text: "Venus", correct: false },
+      { answer: "Earth" },
+      { answer: "Mars" },
+      { answer: "Mercury" },
+      { answer: "Venus" },
     ],
+    correctAnswer: "Earth",
   },
   {
     question: "How many planets are in our solar system, not including Pluto?",
     answers: [
-      { text: "7", correct: false },
-      { text: "8", correct: true },
-      { text: "9", correct: false },
-      { text: "10", correct: false },
+      { answer: "7" },
+      { answer: "8" },
+      { answer: "9" },
+      { answer: "10" },
     ],
+    correctAnswer: "8",
   },
   {
-    question: "what is the oldest planet in our solar system?",
+    question: "What is the oldest planet in our solar system?",
     answers: [
-      { text: "Earth", correct: false },
-      { text: "Jupiter", correct: true },
-      { text: "Mercury", correct: false },
-      { text: "Neptune", correct: false },
+      { answer: "Earth" },
+      { answer: "Jupiter" },
+      { answer: "Mercury" },
+      { answer: "Neptune" },
     ],
+    correctAnswer: "Jupiter",
   },
   {
-    question: "what is the larget planet in our solar system?",
+    question: "What is the larget planet in our solar system?",
     answers: [
-      { text: "Saturn", correct: false },
-      { text: "Uranus", correct: false },
-      { text: "Neptune", correct: false },
-      { text: "Jupiter", correct: true },
+      { answer: "Saturn" },
+      { answer: "Uranus" },
+      { answer: "Neptune" },
+      { answer: "Jupiter" },
     ],
+    correctAnswer: "Jupiter",
   },
 ];
 
 function startQuiz() {
+  displayScore.classList.add("hide");
   startButton.classList.add("hide");
   questionContainerEl.classList.remove("hide");
   currentQuestionIndex = 0;
+  correctAnswerCount = 0;
   setNextQuestion();
 }
 
@@ -65,10 +83,7 @@ function showQuestion(question) {
     //create buttons for each answer
     var button = document.createElement("button");
     //insert text for each answer as the text declared in var questions
-    button.innerText = answer.text;
-    if (answer.correct) {
-      button.dataset.correct = answer.correct;
-    }
+    button.innerText = answer.answer;
     button.addEventListener("click", selectAnswer);
     answerButtons.appendChild(button);
   });
@@ -76,46 +91,36 @@ function showQuestion(question) {
 }
 
 function resetState() {
-  // nextButton.classList.add("hide");
-  while (answerButtons.firstChild) {
-    answerButtons.removeChild(answerButtons.firstChild);
-  }
+  answerButtons.innerHTML = "";
 }
 
 function selectAnswer(event) {
   var selectedButton = event.target;
-  var correct = selectedButton.dataset.correct;
+  console.log(selectedButton.textContent);
 
-  console.log(selectedButton.dataset.correct);
+  console.log(questions[currentQuestionIndex].correctAnswer);
 
-  // setStatusClass(document.body, correct);
-  Array.from(answerButtons.children).forEach(function (button) {
-    button.dataset.correct;
-  });
+  if (
+    selectedButton.textContent == questions[currentQuestionIndex].correctAnswer
+  ) {
+    correctAnswerCount += 5;
+  }
+  console.log(correctAnswerCount);
   if (questions.length > currentQuestionIndex + 1) {
     currentQuestionIndex++;
     setNextQuestion();
     console.log(currentQuestionIndex);
-    // nextButton.classList.remove("hide");
   } else {
-    startButton.classList.remove("hide");
-    startButton.innerText = "Restart";
-    startButton.addEventListener("click", startQuiz);
+    endGame();
   }
 }
-
-// function setStatusClass(element, correct) {
-//   // clearStatusClass(element);
-//   if (correct) {
-//     element.classList.add("correct");
-//   } else {
-//     element.classList.add("wrong");
-//   }
-// }
-
-// function clearStatusClass(element) {
-//   element.classList.remove("correct");
-//   element.classList.remove("wrong");
-// }
-
+function endGame() {
+  startButton.classList.remove("hide");
+  startButton.innerText = "Restart";
+  displayScore.classList.remove("hide");
+  questionContainerEl.classList.add("hide");
+  userScore.innerText = correctAnswerCount;
+  previousHighScore.push(correctAnswerCount);
+  localStorage.setItem("userScore", JSON.stringify(previousHighScore));
+}
 startButton.addEventListener("click", startQuiz);
