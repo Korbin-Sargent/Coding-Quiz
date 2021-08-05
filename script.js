@@ -1,3 +1,5 @@
+var quizTimer = document.getElementById("timer");
+var secondsLeft = 60;
 var correctAnswerCount = 0;
 var userScore = document.getElementById("userScore");
 var displayScore = document.getElementById("display-score");
@@ -12,7 +14,7 @@ var localStorageContents = JSON.parse(localStorage.getItem("userScore"));
 console.log(localStorageContents);
 // var previousHighScore;
 if (localStorageContents !== null) {
-  let previousHighScore = localStorageContents;
+  var previousHighScore = localStorageContents;
 } else {
   previousHighScore = [];
 }
@@ -67,7 +69,24 @@ function startQuiz() {
   questionContainerEl.classList.remove("hide");
   currentQuestionIndex = 0;
   correctAnswerCount = 0;
+  secondsLeft = 60;
   setNextQuestion();
+  setTime();
+}
+
+function setTime() {
+  // Sets interval in variable
+  var timerInterval = setInterval(function () {
+    secondsLeft--;
+    quizTimer.textContent = secondsLeft + " seconds left";
+
+    if (secondsLeft === 0 || currentQuestionIndex === 4) {
+      // Stops execution of action at set interval
+      clearInterval(timerInterval);
+      // Calls function to end the quiz
+      endGame();
+    }
+  }, 1000);
 }
 
 function setNextQuestion() {
@@ -104,7 +123,10 @@ function selectAnswer(event) {
     selectedButton.textContent == questions[currentQuestionIndex].correctAnswer
   ) {
     correctAnswerCount += 5;
+  } else {
+    secondsLeft = secondsLeft - 10;
   }
+
   console.log(correctAnswerCount);
   if (questions.length > currentQuestionIndex + 1) {
     currentQuestionIndex++;
