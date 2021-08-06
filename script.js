@@ -185,10 +185,15 @@ function displayHighScore() {
   // questionContainerEl.classList.add("hide");
   startButton.classList.add("hide");
   displayScore.classList.add("hide");
-  highScoresList.classList.remove("hide");
   var highScoresList = document.getElementById("highScoresList");
-  var highScoresListItem = document.createElement("li");
-  for (var i = 0; i < 3; i++) {}
+  highScoresList.classList.remove("hide");
+  for (var i = 0; i < 4; i++) {
+    var highScoresListItem = document.createElement("li");
+    highScoresList.appendChild(highScoresListItem);
+    highScoresListItem.textContent =
+      JSON.parse(localStorage.getItem("itemsArray")) || [];
+    console.log(JSON.parse(localStorage.getItem("itemsArray")) || []);
+  }
 }
 
 startButton.addEventListener("click", startQuiz);
