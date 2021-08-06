@@ -162,7 +162,7 @@ function endGame() {
     correctAnswerCount +
     "! Click restart button to try again";
   userScore.classList.remove("hide");
-  previousHighScore.push(correctAnswerCount);
+  // previousHighScore.push(correctAnswerCount);
   clearInterval(timerInterval);
   setHighScoreName();
   // userName = prompt("Enter user name to record score");
@@ -199,7 +199,7 @@ function displayHighScore() {
     var playerName = currentPlayer.name;
     var playerScore = currentPlayer.userHighScore;
     var highScoresListItem = document.createElement("li");
-    highScoresListItem.textContent = playerName + playerScore;
+    highScoresListItem.textContent = playerName + " = " + playerScore;
     highScoresList.appendChild(highScoresListItem);
   }
 }
