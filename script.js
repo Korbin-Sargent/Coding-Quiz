@@ -13,15 +13,17 @@ var timerInterval;
 var secondsLeft = 60;
 var correctAnswerCount = 0;
 
-var localStorageContents = JSON.parse(localStorage.getItem(userName));
+var localStorageContents =
+  JSON.parse(localStorage.getItem("playerScore")) || [];
 console.log(localStorageContents);
 
-if (localStorageContents !== null) {
-  var previousHighScore = localStorageContents;
-} else {
-  previousHighScore = [];
-}
-console.log(previousHighScore);
+// if (localStorageContents !== null) {
+//   var previousHighScore = localStorageContents;
+// } else {
+//   previousHighScore = [];
+// }
+
+// console.log(previousHighScore);
 
 var questions = [
   {
@@ -177,22 +179,28 @@ function setHighScoreName() {
     alert("Must Enter User Name");
     return setHighScoreName();
   }
-  localStorage.setItem(userName, JSON.stringify(previousHighScore));
+  var userObj = {};
+  userObj.name = userName;
+  userObj.userHighScore = correctAnswerCount;
+  localStorageContents.push(userObj);
+  localStorage.setItem("playerScore", JSON.stringify(localStorageContents));
 }
 
 function displayHighScore() {
+  var parsedUserScore = JSON.parse(localStorage.getItem("playerScore"));
   //get item for high score from local storage
   // questionContainerEl.classList.add("hide");
   startButton.classList.add("hide");
   displayScore.classList.add("hide");
   var highScoresList = document.getElementById("highScoresList");
   highScoresList.classList.remove("hide");
-  for (var i = 0; i < 4; i++) {
+  for (var i = 0; i < parsedUserScore.length; i++) {
+    var currentPlayer = parsedUserScore[i];
+    var playerName = currentPlayer.name;
+    var playerScore = currentPlayer.userHighScore;
     var highScoresListItem = document.createElement("li");
+    highScoresListItem.textContent = playerName + playerScore;
     highScoresList.appendChild(highScoresListItem);
-    highScoresListItem.textContent =
-      JSON.parse(localStorage.getItem("itemsArray")) || [];
-    console.log(JSON.parse(localStorage.getItem("itemsArray")) || []);
   }
 }
 
