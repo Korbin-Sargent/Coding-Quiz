@@ -1,18 +1,21 @@
+var submitScore = document.getElementById("submitName");
+var highScoreBtn = document.getElementById("high-score-btn");
 var quizTimer = document.getElementById("timer");
-var secondsLeft = 60;
-var correctAnswerCount = 0;
 var userScore = document.getElementById("userScore");
 var displayScore = document.getElementById("display-score");
 var startButton = document.getElementById("startButton");
-var nextButton = document.getElementById("next-btn");
 var questionContainerEl = document.getElementById("question-container");
 var questionEl = document.getElementById("question");
 var answerButtons = document.getElementById("answer-buttons");
+var userName = "";
 var currentQuestionIndex = "";
+var timerInterval;
+var secondsLeft = 60;
+var correctAnswerCount = 0;
 
-var localStorageContents = JSON.parse(localStorage.getItem("userScore"));
+var localStorageContents = JSON.parse(localStorage.getItem(userName));
 console.log(localStorageContents);
-// var previousHighScore;
+
 if (localStorageContents !== null) {
   var previousHighScore = localStorageContents;
 } else {
@@ -52,7 +55,7 @@ var questions = [
     correctAnswer: "Jupiter",
   },
   {
-    question: "What is the larget planet in our solar system?",
+    question: "What is the largest planet in our solar system?",
     answers: [
       { answer: "Saturn" },
       { answer: "Uranus" },
@@ -61,32 +64,41 @@ var questions = [
     ],
     correctAnswer: "Jupiter",
   },
+  {
+    question: "What is the smallest planet in our solar system?",
+    answers: [
+      { answer: "Mercury" },
+      { answer: "Uranus" },
+      { answer: "Neptune" },
+      { answer: "Mars" },
+    ],
+    correctAnswer: "Mercury",
+  },
 ];
-
-function startQuiz() {
-  displayScore.classList.add("hide");
-  startButton.classList.add("hide");
-  questionContainerEl.classList.remove("hide");
-  currentQuestionIndex = 0;
-  correctAnswerCount = 0;
-  secondsLeft = 60;
-  setNextQuestion();
-  setTime();
-}
 
 function setTime() {
   // Sets interval in variable
-  var timerInterval = setInterval(function () {
+  secondsLeft = 60;
+  timerInterval = setInterval(function () {
     secondsLeft--;
     quizTimer.textContent = secondsLeft + " seconds left";
-
-    if (secondsLeft === 0 || currentQuestionIndex === 4) {
+    if (secondsLeft === 0) {
       // Stops execution of action at set interval
       clearInterval(timerInterval);
       // Calls function to end the quiz
       endGame();
     }
   }, 1000);
+}
+
+function startQuiz() {
+  setTime();
+  displayScore.classList.add("hide");
+  startButton.classList.add("hide");
+  questionContainerEl.classList.remove("hide");
+  currentQuestionIndex = 0;
+  correctAnswerCount = 0;
+  setNextQuestion();
 }
 
 function setNextQuestion() {
@@ -136,13 +148,48 @@ function selectAnswer(event) {
     endGame();
   }
 }
+
+//Function to end the game. Removes hide class from start button and
 function endGame() {
   startButton.classList.remove("hide");
   startButton.innerText = "Restart";
   displayScore.classList.remove("hide");
   questionContainerEl.classList.add("hide");
-  userScore.innerText = correctAnswerCount;
+  userScore.innerText =
+    "Your Score is " +
+    correctAnswerCount +
+    "! Click restart button to try again";
+  userScore.classList.remove("hide");
   previousHighScore.push(correctAnswerCount);
-  localStorage.setItem("userScore", JSON.stringify(previousHighScore));
+  clearInterval(timerInterval);
+  setHighScoreName();
+  // userName = prompt("Enter user name to record score");
+  // if (userName == "") {
+  //   alert("Must Enter User Name");
+  //   return userName;
+  // }
+  // localStorage.setItem(userName, JSON.stringify(previousHighScore));
 }
+
+function setHighScoreName() {
+  userName = prompt("Enter user name to record score");
+  if (userName == "") {
+    alert("Must Enter User Name");
+    return setHighScoreName();
+  }
+  localStorage.setItem(userName, JSON.stringify(previousHighScore));
+}
+
+function displayHighScore() {
+  //get item for high score from local storage
+  // questionContainerEl.classList.add("hide");
+  startButton.classList.add("hide");
+  displayScore.classList.add("hide");
+  highScoresList.classList.remove("hide");
+  var highScoresList = document.getElementById("highScoresList");
+  var highScoresListItem = document.createElement("li");
+  for (var i = 0; i < 3; i++) {}
+}
+
 startButton.addEventListener("click", startQuiz);
+highScoreBtn.addEventListener("click", displayHighScore);

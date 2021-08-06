@@ -8,7 +8,7 @@
     <title>Quiz Time!</title>
   </head>
   <header>
-    <h1 id="high-score">High Score</h2>
+    <button id="high-score-btn">High Score</button>
     <h2 id="timer"></h2>
   </header>
   <body>
@@ -18,12 +18,16 @@
         <div id="answer-buttons" class="answer-grid"></div>
       </div>
       <div id="display-score" class="hide">
-        <h3>Complete!</h3>
-        <p id="userScore"></p>
+        <h3>Congratualtions! You've completed the quiz</h3>
+        <h4 id="userScore" class="hide"></h4>
       </div>
+      <div id="display-high-score" class="hide"></div>
+      <!-- <div id="userScore" class="hide"></div> -->
+        <ul id="highScoresList" class="hide">High Scores</ul>
       <button id="startButton" class="startButton controls">
         Press Start to Begin the Quiz
       </button>
+      <button id=submitName" class="hide">Submit Score</button>
     </div>
   </body>
   <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
