@@ -188,6 +188,9 @@ function setHighScoreName() {
 
 function displayHighScore() {
   var parsedUserScore = JSON.parse(localStorage.getItem("playerScore"));
+  console.log(
+    parsedUserScore.sort((a, b) => (a.userHighScore < b.userHighScore ? 1 : -1))
+  );
   //get item for high score from local storage
   // questionContainerEl.classList.add("hide");
   startButton.classList.add("hide");
